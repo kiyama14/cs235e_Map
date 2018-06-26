@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <string>
 #include <algorithm>
+
 using namespace std;
 typedef map<string, int> Map;
 typedef map<string, int>::reverse_iterator MapIterator;
@@ -30,7 +31,7 @@ int main(int argc, const char * argv[]) {
     fin.open(userInput.c_str());
     
     if (fin.fail()) {
-        cout << "Error: Unable to open file";
+        cout << "Error: Unable to open file" << endl;
         return 0;
     }
     
@@ -39,13 +40,15 @@ int main(int argc, const char * argv[]) {
     
     while (fin >> word) {
         
-        transform(word.begin(), word.end(), word.begin(), ::tolower);
+        
         string noPunWord = "";
         
         for (int i = 0; i < word.length(); i++) {
-            if (!ispunct(word[i]) || word[i] != '-')
+            if (!ispunct(word[i]) || word[i] == '-')
                 noPunWord += word[i];
         }
+        
+        transform(noPunWord.begin(), noPunWord.end(), noPunWord.begin(), ::tolower);
         
         myMap[noPunWord]++;
         numberOfWords++;
@@ -54,13 +57,23 @@ int main(int argc, const char * argv[]) {
     
     fin.close();
     
-
-    cout << "Number of words processed: " << numberOfWords;
-    
+    cout << endl;
+    cout << "Number of words processed: " << numberOfWords << endl;
+    cout << "100 most common words found and their frequencies:" << endl;
     multimap<int, string> megaMap;
+    pair<int, string> myPair;
     
+    for (MapIterator it = myMap.rbegin(); it != myMap.rend(); it++) {
+        myPair.first = it->second;
+        myPair.second = it->first;
+        megaMap.insert(myPair);
+    }
     
-    
+    int i =  0;
+    for (MultiMapIterator it = megaMap.rbegin(); i < 100; it++) {
+        cout << setw(23) << it->second << " - " << it->first << endl;
+        i++;
+    }
     
     
     
